@@ -17,7 +17,7 @@ app.use(express.static('public'));
 
 // simple route
 app.get('/', (req, res) => {
-    res.json({ message: 'Hello world' });
+    res.json({ message: 'Hello world from Practice Service' });
 });
 
 const mathjax = require('mathjax-node')
