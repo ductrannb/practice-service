@@ -2,14 +2,18 @@ const path = require('path');
 
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+
 
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(multer().array());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(express.static('public'));
@@ -22,16 +26,16 @@ app.get('/', (req, res) => {
 
 const mathjax = require('mathjax-node')
 mathjax.start()
-app.get('/convert', async (req, res, next) => {
+app.post('/math', async (req, res, next) => {
     try {
-        const rawString = req.query.tex
+        const rawString = req.body.tex
         await mathjax.typeset({
             math: rawString,
             format: "TeX",
             mml: true,
         }, (data) => {
             res.status(200).json({
-                convert: data.mml
+                result: data.mml
             })
         })
     } catch (err) {
